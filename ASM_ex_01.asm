@@ -8,15 +8,15 @@ import exit msvcrt.dll
  
 segment data use32 class = data
 
-
+    a dw 9999h
+    b dw 3333h
     
 segment code use32 class = code
 start:
 
-    mov eax, 5
-    mov ax, 6
-    mov ah, 7
-    mov al, 8
+    mov ax, [b]
+    mov bx, [a]
+    mul bx
     
     push dword 0
     call [exit]
