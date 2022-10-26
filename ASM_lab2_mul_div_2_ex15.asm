@@ -23,12 +23,12 @@ start:
     ;f*(e-2)/[3*(d-5)]
     mov al, [d]
     sub al, 5
-    imul byte [three] ; ax = 3*(d-5)
+    mul byte [three] ; ax = 3*(d-5)
     mov bx, ax ; bx = 3*(d-5)
     mov ax, [e]
     sub ax, 2
-    imul word [f] ; ax = f*(e-2)
-    idiv bx
+    mul word [f] ; dx:ax = f*(e-2)
+    div bx
     push dword 0
     call [exit]
 

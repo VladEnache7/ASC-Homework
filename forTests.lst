@@ -1,0 +1,28 @@
+     1                                  bits 32 
+     2                                  
+     3                                  global start
+     4                                  
+     5                                  extern exit
+     6                                  
+     7                                  import exit msvcrt.dll
+     8                                   
+     9                                  segment data use32 class = data
+    10                                      
+    11 00000000 59657373204920616D-         string db 'Yess I am better now'
+    11 00000009 20626574746572206E-
+    11 00000012 6F77               
+    12                                      strLen equ $-string
+    13 00000014 01                          var1 db 1
+    14                                      var1Len equ $-var1
+    15                                      
+    16                                  segment code use32 class = code
+    17                                  start:
+    18 00000000 B804000000                  mov eax, 4
+    19 00000005 BB01000000                  mov ebx, 1
+    20 0000000A B9[00000000]                mov ecx, string
+    21 0000000F BA14000000                  mov edx, strLen
+    22                                      
+    23 00000014 6A00                        push dword 0
+    24 00000016 FF15[00000000]              call [exit]
+    25                                  
+    26                                  
