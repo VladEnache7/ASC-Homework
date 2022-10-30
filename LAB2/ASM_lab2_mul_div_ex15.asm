@@ -18,16 +18,16 @@ segment code use32 class = code
 start:
     
     mov al, [a] 
-    mul byte [two]  ; ax = a * 2
+    imul byte [two]  ; ax = a * 2
     mov bx, ax  ; bx = a * 2
     mov cl, [b]
     sub cl, 3
     mov al, cl ; al = b - 3
-    mul byte [two] ; ax = 2 * (b - 3)
+    imul byte [two] ; ax = 2 * (b - 3)
     add bx, ax ; bx = a * 2 + 2 * (b - 3)
     sub bx, [d] ; bx = a * 2 + 2 * (b - 3) - d-2*c
     mov al, [c]
-    mul byte [two] ; ax = c * 2
+    imul byte [two] ; ax = c * 2
     sub bx, ax
     push dword 0
     call [exit]

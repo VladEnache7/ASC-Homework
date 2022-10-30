@@ -8,21 +8,36 @@
      8                                   
      9                                  segment data use32 class = data
     10                                      
-    11 00000000 59657373204920616D-         string db 'Yess I am better now'
-    11 00000009 20626574746572206E-
-    11 00000012 6F77               
-    12                                      strLen equ $-string
-    13 00000014 01                          var1 db 1
-    14                                      var1Len equ $-var1
-    15                                      
-    16                                  segment code use32 class = code
-    17                                  start:
-    18 00000000 B804000000                  mov eax, 4
-    19 00000005 BB01000000                  mov ebx, 1
-    20 0000000A B9[00000000]                mov ecx, string
-    21 0000000F BA14000000                  mov edx, strLen
-    22                                      
-    23 00000014 6A00                        push dword 0
-    24 00000016 FF15[00000000]              call [exit]
-    25                                  
-    26                                  
+    11 00000000 E8030000                    a dd 1000
+    12 00000004 64                          b db 100
+    13 00000005 0400                        c dw 4
+    14 00000007 0A                          d db 10
+    15 00000008 2C01000000000000            e dq 300
+    16 00000010 02                          two db 2
+    17                                      
+    18                                  segment code use32 class = code
+    19                                  start: ;a + b / c - d * 2 - e
+    20 00000000 A0[04000000]                mov AL, [b]     ;AL = b
+    21 00000005 B400                        mov AH, 0       ;AL -> AX (unsigned)
+    22 00000007 66BA0000                    mov DX, 0       ;AX -> DX:AX (unsigned) DX:AX = b
+    23                                      
+    24 0000000B 66F735[05000000]            div WORD [c]    ;AX = b / c
+    25 00000012 6689C3                      mov BX, AX      ;BX = AX = b / c
+    26 00000015 A0[07000000]                mov AL, [d]     ;AL = d
+    27 0000001A F625[10000000]              mul BYTE [two]  ;AX = d * 2
+    28 00000020 6629C3                      sub BX, AX      ;BX = b / c - d * 2
+    29                                      
+    30 00000023 666A00                      push WORD 0
+    31 00000026 6653                        push BX         ;stack = 00 00 BX = EBX
+    32 00000028 5B                          pop EBX         ;EBX = b / c - d * 2
+    33                                      
+    34 00000029 A1[00000000]                mov EAX, [a]    ;EAX = a
+    35 0000002E 01D8                        add EAX, EBX    ;EAX = a + b / c - d * 2
+    36                                      
+    37 00000030 BA00000000                  mov EDX, 0      ;EDX:EAX = a + b / c - d * 2
+    38 00000035 2B05[08000000]              sub EAX, [e]    ;EAX = lower dword of e
+    39 0000003B 1B15[0C000000]              sbb EDX, [e + 4];EDX = subtract with CF the high part of e
+    40 00000041 6A00                        push dword 0
+    41 00000043 FF15[00000000]              call [exit]
+    42                                  
+    43                                  
