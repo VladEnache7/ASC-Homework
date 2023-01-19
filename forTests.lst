@@ -8,36 +8,21 @@
      8                                   
      9                                  segment data use32 class = data
     10                                      
-    11 00000000 E8030000                    a dd 1000
-    12 00000004 64                          b db 100
-    13 00000005 0400                        c dw 4
-    14 00000007 0A                          d db 10
-    15 00000008 2C01000000000000            e dq 300
-    16 00000010 02                          two db 2
-    17                                      
-    18                                  segment code use32 class = code
-    19                                  start: ;a + b / c - d * 2 - e
-    20 00000000 A0[04000000]                mov AL, [b]     ;AL = b
-    21 00000005 B400                        mov AH, 0       ;AL -> AX (unsigned)
-    22 00000007 66BA0000                    mov DX, 0       ;AX -> DX:AX (unsigned) DX:AX = b
-    23                                      
-    24 0000000B 66F735[05000000]            div WORD [c]    ;AX = b / c
-    25 00000012 6689C3                      mov BX, AX      ;BX = AX = b / c
-    26 00000015 A0[07000000]                mov AL, [d]     ;AL = d
-    27 0000001A F625[10000000]              mul BYTE [two]  ;AX = d * 2
-    28 00000020 6629C3                      sub BX, AX      ;BX = b / c - d * 2
-    29                                      
-    30 00000023 666A00                      push WORD 0
-    31 00000026 6653                        push BX         ;stack = 00 00 BX = EBX
-    32 00000028 5B                          pop EBX         ;EBX = b / c - d * 2
-    33                                      
-    34 00000029 A1[00000000]                mov EAX, [a]    ;EAX = a
-    35 0000002E 01D8                        add EAX, EBX    ;EAX = a + b / c - d * 2
-    36                                      
-    37 00000030 BA00000000                  mov EDX, 0      ;EDX:EAX = a + b / c - d * 2
-    38 00000035 2B05[08000000]              sub EAX, [e]    ;EAX = lower dword of e
-    39 0000003B 1B15[0C000000]              sbb EDX, [e + 4];EDX = subtract with CF the high part of e
-    40 00000041 6A00                        push dword 0
-    41 00000043 FF15[00000000]              call [exit]
-    42                                  
-    43                                  
+    11 00000000 11                          var1 db 11h
+    12 00000001 22                          .a db 22h
+    13 00000002 3300                        .b dw 33h
+    14 00000004 44000000                    .c dd 44h
+    15 00000008 34120000                    var2 dd 1234h
+    16 0000000C 13                          .a db 13h
+    17 0000000D 120023004500                tablou dw 12h, 23h, 45h
+    18 00000013 56006700                           dw 56h, 67h
+    19 00000017 1700000096580000                   dd 17h, 5896h
+    20                                      
+    21                                  segment code use32 class = code
+    22                                  start: 
+    23 00000000 FF35[04000000]              push dword [var1.c]
+    24 00000006 FF35[08000000]              push dword [var2]
+    25                                      
+    26 0000000C FF15[00000000]              call [exit]
+    27                                  
+    28                                  
